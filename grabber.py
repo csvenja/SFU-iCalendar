@@ -8,7 +8,7 @@ import re
 from bs4 import BeautifulSoup
 import json
 
-def sfu(username, password, student_number):
+def sfu(username, password):
 	def login(username, password):
 		username_upper = username.upper()
 		session = requests.Session()
@@ -16,7 +16,13 @@ def sfu(username, password, student_number):
 		session.post('https://go.sfu.ca/psp/paprd/EMPLOYEE/EMPL/?cmd=login', data=payload)
 		return session
 	
-	def get_frame(session):
+	def get_student_number(session):
+		frame = session.get('https://go.sfu.ca/psp/paprd/EMPLOYEE/EMPL/h/?cmd=getCachedPglt&pageletname=SFU_STU_CENTER_PAGELET&tab=SFU_STUDENT_CENTER&PORTALPARAM_COMPWIDTH=Narrow&ptlayout=N')
+		raw_page = BeautifulSoup(frame.text)
+		student_number = raw_page.find(id='DERIVED_SSS_SCL_EMPLID').string
+		return student_number
+	
+	def get_frame(session, student_number):
 		frame = session.get('https://sims-prd.sfu.ca/psc/csprd_1/EMPLOYEE/HRMS/c/SA_LEARNER_SERVICES.SS_ES_STUDY_LIST.GBL?Page=SS_ES_STUDY_LIST&Action=U&ACAD_CAREER=UGRD&EMPLID='+student_number+'&INSTITUTION=SFUNV&STRM=1141&TargetFrameName=None')
 		raw_page = BeautifulSoup(frame.text)
 		class_frame = raw_page.find(id="ACE_$ICField68$0")
@@ -76,7 +82,8 @@ def sfu(username, password, student_number):
 		print json.dumps(classes, ensure_ascii=False, indent=2)
 		
 	session = login(username, password)
-	class_frame = get_frame(session)
+	student_number = get_student_number(session)
+	class_frame = get_frame(session, student_number)
 	text = generate_text(class_frame)
 	class_index, class_count = generate_index(class_frame, text)
 	class_i = 0
@@ -91,8 +98,7 @@ def sfu(username, password, student_number):
 def main():
 	username = raw_input('Username: ')
 	password = getpass.getpass('Password: ')
-	student_number = raw_input('Student Number: ')
-	sfu(username, password, student_number)
+	sfu(username, password)
 		
 if __name__ == '__main__':
 	main()
