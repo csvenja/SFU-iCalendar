@@ -24,7 +24,9 @@ def sfu(username, password):
 		frame = session.get('https://go.sfu.ca/psp/paprd/EMPLOYEE/EMPL/h/?cmd=getCachedPglt&pageletname=SFU_STU_CENTER_PAGELET&tab=SFU_STUDENT_CENTER&PORTALPARAM_COMPWIDTH=Narrow&ptlayout=N')
 		raw_page = BeautifulSoup(frame.text)
 		student_number = raw_page.find(id='DERIVED_SSS_SCL_EMPLID').string
-		return student_number
+		student_name = raw_page.find(id='DERIVED_SSS_SCL_TITLE1$35$').string
+		student_name = student_name.replace('\'s Student Center', '')
+		return (student_number, student_name)
 	
 	def get_frame(session, student_number):
 		frame = session.get('https://sims-prd.sfu.ca/psc/csprd_1/EMPLOYEE/HRMS/c/SA_LEARNER_SERVICES.SS_ES_STUDY_LIST.GBL?Page=SS_ES_STUDY_LIST&Action=U&ACAD_CAREER=UGRD&EMPLID='+student_number+'&INSTITUTION=SFUNV&STRM=1141&TargetFrameName=None')
@@ -57,7 +59,15 @@ def sfu(username, password):
 	    'Fri': 'FR',
 	    'Sat': 'SA',
 	    'Sun': 'SU',
+		'MO': 0,
+		'TU': 1,
+		'WE': 2,
+		'TH': 3,
+		'FR': 4,
+		'SA': 5,
+		'SU': 6
 	}
+	
 	def generate_lesson_item(text_item):
 		lesson_item = {}
 		date_item = []
@@ -67,7 +77,7 @@ def sfu(username, password):
 		lesson_item['days'] = text_item[2].split(',')
 		for day_i, value in enumerate(lesson_item['days']):
 			lesson_item['days'][day_i] = weekdays[value]
-		lesson_item['location'] = text_item[3]
+		lesson_item['location'] = text_item[3].replace(u'Location:  ', '')
 		lesson_item['start_date'] = text_item[4]
 		lesson_item['end_date'] = text_item[5]
 		if text_item[6] == 'Instructor:':
@@ -99,21 +109,24 @@ def sfu(username, password):
 		print json.dumps(classes, ensure_ascii=False, indent=2)
 
 	def datelize(date_string):
-		return datetime.strptime(date_string, '%Y/%m/%d')
+		new_date = datetime.strptime(date_string, '%Y/%m/%d')
+		new_date = new_date.replace(tzinfo=timezone('Canada/Pacific'))
+		return new_date.date()
 		
 	def timelize(time_string):
 		new_time = datetime.strptime(time_string, '%I:%M%p')
 		new_time = new_time.replace(tzinfo=timezone('Canada/Pacific'))
 		return new_time.time()
-		
+	
 	def generate_ical():
 		cal = Calendar()
 		cal['version'] = '2.0'
 		cal['prodid'] = '-//Simon Fraser University//Svenja Cao//EN'
 		
+		holidays = [datelize('2014/02/10')]
+		
 		for class_item in classes:
 			for lesson in class_item['lessons']:
-				
 				start_date = datelize(lesson['start_date'])
 				start_time = timelize(lesson['start_time'])
 				end_time = timelize(lesson['end_time'])
@@ -121,7 +134,6 @@ def sfu(username, password):
 				end = datetime.combine(start_date, end_time)
 				end_date = datelize(lesson['end_date'])
 				until = datetime.combine(end_date, end_time)
-				
 				for day in lesson['days']:
 					event = Event()
 					if lesson['start_date'] == lesson['end_date']:
@@ -136,13 +148,20 @@ def sfu(username, password):
 						event.add('description', 'Instructor: ' + lesson['instructor'] + '\nSection: ' + class_item['section'])
 					else:
 						event.add('description', 'Section: ' + class_item['section'])
+					if start_date.weekday() == weekdays[day]:
+						exdates = []
+					else:
+						exdates = [start]
+					for holiday in holidays:
+						exdates.append(datetime.combine(holiday, start_time))
+					event.add('exdate', exdates)
+					
 					event['uid'] = str(uuid1()) + '@SFU'
 					cal.add_component(event)
-					
 		return cal.to_ical()
 
 	session = login(username, password)
-	student_number = get_student_number(session)
+	student_number, student_name = get_student_number(session)
 	class_frame = get_frame(session, student_number)
 	text = generate_text(class_frame)
 	class_index, class_count = generate_index(class_frame, text)
@@ -153,7 +172,7 @@ def sfu(username, password):
 		if not deleted:
 			classes.append(class_item)
 		class_i = class_i + 1
-	with open(os.path.join(os.path.dirname(__file__), 'SFU.ics'), 'w') as ical:
+	with open(os.path.join(os.path.dirname(__file__), student_name + '.ics'), 'w') as ical:
 		ical.write(generate_ical())
 #	dump(classes)
 
