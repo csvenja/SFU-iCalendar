@@ -25,16 +25,15 @@ def sfu(username, password):
 		frame = session.get('https://go.sfu.ca/psp/paprd/EMPLOYEE/EMPL/h/?cmd=getCachedPglt&pageletname=SFU_STU_CENTER_PAGELET&tab=SFU_STUDENT_CENTER&PORTALPARAM_COMPWIDTH=Narrow&ptlayout=N')
 		raw_page = BeautifulSoup(frame.text)
 		student_number = raw_page.find(id='DERIVED_SSS_SCL_EMPLID').string
-		student_name = raw_page.find(id='DERIVED_SSS_SCL_TITLE1$35$').string # student_name's Student Center
-		student_name = student_name.replace('\'s Student Center', '')
-		return (student_number, student_name)
+		return student_number
 	
 	# extract frame
 	def get_frame(session, student_number):
 		frame = session.get('https://sims-prd.sfu.ca/psc/csprd_1/EMPLOYEE/HRMS/c/SA_LEARNER_SERVICES.SS_ES_STUDY_LIST.GBL?Page=SS_ES_STUDY_LIST&Action=U&ACAD_CAREER=UGRD&EMPLID='+student_number+'&INSTITUTION=SFUNV&STRM=1141&TargetFrameName=None')
 		raw_page = BeautifulSoup(frame.text)
 		class_frame = raw_page.find(id="ACE_$ICField68$0")
-		return class_frame
+		student_name = raw_page.find(id='DERIVED_SSE_DSP_PERSON_NAME').string
+		return (class_frame, student_name)
 		
 	# extract text
 	def generate_text(class_frame):
@@ -82,7 +81,11 @@ def sfu(username, password):
 		return lesson_item
 
 	# parse text to class
-	def generate_class_item(text, class_index, class_i):
+	def generate_class_item(text, class_index, class_i, class_count):
+		if class_i == class_count:
+			last_class = True
+		else:
+			last_class = False
 		start = class_index[class_i]
 		end = class_index[class_i + 1]
 		current = start
@@ -96,8 +99,11 @@ def sfu(username, password):
 		else:
 			class_item['component'] = text[start + 4]
 		class_item['description'] = text[start + 5]
+		if text[start + 8] != 'Enrolled':
+			deleted = True
+			return (deleted, class_item)
 		current = start + 12 # 12 non-empty lines header for each class
-		while current < end - 7: # 7 captions for class info
+		while (current < end - 7 and not last_class) or (current < end and last_class): # 7 captions for class info
 			lesson_item = generate_lesson_item(text[current:current + 8]) # 8 lines for one lesson
 			class_item['lessons'].append(lesson_item)
 			current = current + 9 # move on 9 lines after one lesson
@@ -150,9 +156,9 @@ def sfu(username, password):
 					# byday doesn't support list for now
 					event.add('location', lesson['location'])
 					if 'instructor' in lesson:
-						event.add('description', 'Instructor: ' + lesson['instructor'] + '\nSection: ' + class_item['section'])
+						event.add('description', 'Instructor: ' + lesson['instructor'] + '\nDescription' + class_item['description'] + 'Section: ' + class_item['section'])
 					else:
-						event.add('description', 'Section: ' + class_item['section'])
+						event.add('description', 'Description' + class_item['description'] + 'Section: ' + class_item['section'])
 						# the Final has no instructor
 
 					if start_date.weekday() == weekdays[day]:
@@ -171,16 +177,16 @@ def sfu(username, password):
 
 	# main
 	session = login(username, password)
-	student_number, student_name = get_student_number(session)
-	class_frame = get_frame(session, student_number)
+	student_number = get_student_number(session)
+	class_frame, student_name = get_frame(session, student_number)
 	text = generate_text(class_frame)
 	class_index, class_count = generate_index(class_frame, text)
 	class_i = 0
 	classes = []
 	while class_i < class_count:
-		deleted, class_item = generate_class_item(text, class_index, class_i)
+		deleted, class_item = generate_class_item(text, class_index, class_i, class_count)
 		if not deleted:
-			# delete all 'Section' classes
+			# delete all 'Section' classes and not enrolled classes
 			classes.append(class_item)
 		class_i = class_i + 1
 	with open(os.path.join(os.path.dirname(__file__), student_name + '.ics'), 'w') as ical:
