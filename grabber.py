@@ -24,7 +24,8 @@ def sfu(username, password):
 	def get_student_number(session):
 		frame = session.get('https://go.sfu.ca/psp/paprd/EMPLOYEE/EMPL/h/?cmd=getCachedPglt&pageletname=SFU_STU_CENTER_PAGELET&tab=SFU_STUDENT_CENTER&PORTALPARAM_COMPWIDTH=Narrow&ptlayout=N')
 		raw_page = BeautifulSoup(frame.text)
-		student_number = raw_page.find(id='DERIVED_SSS_SCL_EMPLID').string
+		student_number = raw_page.find(id='DERIVED_SSS_SCL_EMPLID')
+		student_number = student_number.string
 		return student_number
 	
 	# extract frame
