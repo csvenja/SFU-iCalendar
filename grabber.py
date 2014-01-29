@@ -76,13 +76,13 @@ def sfu(username, password):
 		lesson_item['location'] = text_item[3].replace(u'Location:  ', '') # remove redundant caption
 		lesson_item['start_date'] = text_item[4]
 		lesson_item['end_date'] = text_item[5]
-		if text_item[6] == 'Instructor:': # Final has only 6 lines lesson info
+		if len(text_item) > 6 and text_item[6] == 'Instructor:': # Final has only 6 lines lesson info
 			lesson_item['instructor'] = text_item[7]
 		return lesson_item
 
 	# parse text to class
 	def generate_class_item(text, class_index, class_i, class_count):
-		if class_i == class_count:
+		if class_i == class_count - 1:
 			last_class = True
 		else:
 			last_class = False
@@ -156,9 +156,9 @@ def sfu(username, password):
 					# byday doesn't support list for now
 					event.add('location', lesson['location'])
 					if 'instructor' in lesson:
-						event.add('description', 'Instructor: ' + lesson['instructor'] + '\nDescription' + class_item['description'] + 'Section: ' + class_item['section'])
+						event.add('description', 'Instructor: ' + lesson['instructor'] + '\nDescription: ' + class_item['description'] + '\nSection: ' + class_item['section'])
 					else:
-						event.add('description', 'Description' + class_item['description'] + 'Section: ' + class_item['section'])
+						event.add('description', 'Description: ' + class_item['description'] + '\nSection: ' + class_item['section'])
 						# the Final has no instructor
 
 					if start_date.weekday() == weekdays[day]:
