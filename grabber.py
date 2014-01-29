@@ -191,6 +191,7 @@ def sfu(username, password):
 		class_i = class_i + 1
 	with open(os.path.join(os.path.dirname(__file__), student_name + '.ics'), 'w') as ical:
 		ical.write(generate_ical())
+	print "Dumped successfully."
 	# dump(classes)
 
 def main():
