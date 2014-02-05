@@ -7,12 +7,12 @@ import os.path
 from uuid import uuid1
 import requests
 from bs4 import BeautifulSoup
-from icalendar import Calendar, Event
-from datetime import datetime, date, time
+from icalendar import Calendar, Event, Alarm, vDuration, vText, vDDDTypes
+from datetime import datetime, date, time, timedelta
 from pytz import timezone
 import json
 
-def sfu(username, password):
+def sfu(username, password, alert):
 	def login(username, password):
 		username_upper = username.upper()
 		session = requests.Session()
@@ -156,11 +156,10 @@ def sfu(username, password):
 					event.add('rrule', {'freq': 'weekly', 'byday': day, 'until': until, 'wkst': 'SU'})
 					# byday doesn't support list for now
 					event.add('location', lesson['location'])
-					if 'instructor' in lesson:
-						event.add('description', 'Instructor: ' + lesson['instructor'] + '\nDescription: ' + class_item['description'] + '\nSection: ' + class_item['section'])
-					else:
-						event.add('description', 'Description: ' + class_item['description'] + '\nSection: ' + class_item['section'])
-						# the Final has no instructor
+					description = 'Description: ' + class_item['description'] + '\nSection: ' + class_item['section']
+					if 'instructor' in lesson: # the Final has no instructor
+						description = 'Instructor: ' + lesson['instructor'] + '\n' + description
+					event.add('description', description)
 
 					if start_date.weekday() == weekdays[day]:
 						# if a course has class on first day, the first day won't be ignored
@@ -172,6 +171,14 @@ def sfu(username, password):
 						exdates.append(datetime.combine(holiday, start_time))
 					event.add('exdate', exdates)
 					
+					if alert and unicode(alert).isnumeric():
+						alarm = Alarm()
+						alarm.add('action', 'DISPLAY')
+						
+						alert_time = timedelta(minutes=-int(alert))
+						alarm.add('trigger', alert_time)
+						event.add_component(alarm)
+						
 					event['uid'] = str(uuid1()) + '@SFU'
 					cal.add_component(event)
 		return cal.to_ical()
@@ -198,7 +205,8 @@ def sfu(username, password):
 def main():
 	username = raw_input('Username: ')
 	password = getpass.getpass('Password: ')
-	sfu(username, password)
-			
+	alert = raw_input('Alert before (minutes, enter to skip): ')
+	sfu(username, password, alert)
+
 if __name__ == '__main__':
 	main()
