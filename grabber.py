@@ -7,8 +7,8 @@ import os.path
 from uuid import uuid1
 import requests
 from bs4 import BeautifulSoup
-from icalendar import Calendar, Event, Alarm, vDuration, vText, vDDDTypes
-from datetime import datetime, date, time, timedelta
+from icalendar import Calendar, Event, Alarm
+from datetime import datetime, timedelta
 from pytz import timezone
 import json
 
@@ -30,9 +30,10 @@ def sfu(username, password, alert):
 	
 	# extract frame
 	def get_frame(session, student_number):
-		frame = session.get('https://sims-prd.sfu.ca/psc/csprd_1/EMPLOYEE/HRMS/c/SA_LEARNER_SERVICES.SS_ES_STUDY_LIST.GBL?Page=SS_ES_STUDY_LIST&Action=U&ACAD_CAREER=UGRD&EMPLID='+student_number+'&INSTITUTION=SFUNV&STRM=1141&TargetFrameName=None')
+		address = ['https://sims-prd.sfu.ca/psc/csprd_1/EMPLOYEE/HRMS/c/SA_LEARNER_SERVICES.SS_ES_STUDY_LIST.GBL?Page=SS_ES_STUDY_LIST&Action=U&ACAD_CAREER=UGRD&EMPLID=', '&INSTITUTION=SFUNV&STRM=', '&TargetFrameName=None']
+		frame = session.get(address[0] + student_number + address[1] + str(1144) + address[2])
 		raw_page = BeautifulSoup(frame.text)
-		class_frame = raw_page.find(id="ACE_$ICField68$0")
+		class_frame = raw_page.find(id="ACE_$ICField75$0")
 		student_name = raw_page.find(id='DERIVED_SSE_DSP_PERSON_NAME').string
 		return (class_frame, student_name)
 		
@@ -43,6 +44,8 @@ def sfu(username, password, alert):
 		for item in soup_all:
 			if len(item.string.strip()) > 0:
 				text.append(item.string.strip()) # remove empty lines
+		for item in text:
+			print item
 		return text
 
 	# index class name to separate text for each class
@@ -79,6 +82,7 @@ def sfu(username, password, alert):
 		lesson_item['end_date'] = text_item[5]
 		if len(text_item) > 6 and text_item[6] == 'Instructor:': # Final has only 6 lines lesson info
 			lesson_item['instructor'] = text_item[7]
+		print lesson_item
 		return lesson_item
 
 	# parse text to class
@@ -202,11 +206,8 @@ def sfu(username, password, alert):
 	print "Dumped successfully."
 	# dump(classes)
 
-def main():
+if __name__ == '__main__':
 	username = raw_input('Username: ')
 	password = getpass.getpass('Password: ')
 	alert = raw_input('Alert before (minutes, enter to skip): ')
 	sfu(username, password, alert)
-
-if __name__ == '__main__':
-	main()
