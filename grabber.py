@@ -154,13 +154,14 @@ def sfu(username, password, alert):
             class_i = class_i + 1
         else:
             break
-    with open(os.path.join(os.path.dirname(__file__), student_name + '.ics'), 'w') as ical:
-        ical.write(generate_ical())
-    print "Dumped successfully."
+    return (student_name, generate_ical())
 #    dump(classes)
 
 if __name__ == '__main__':
     username = raw_input('Username: ')
     password = getpass.getpass('Password: ')
     alert = raw_input('Alert before (minutes, enter to skip): ')
-    sfu(username, password, alert)
+    student_name, calendar = sfu(username, password, alert)
+    with open(os.path.join(os.path.dirname(__file__), student_name + '.ics'), 'w') as ical:
+        ical.write(calendar)
+        print "Dumped successfully."

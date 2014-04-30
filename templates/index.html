@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>SFU iCalendar Generator</title>
+	<link rel="stylesheet" type="text/css" href="static/style.css">
+</head>
+<body>
+	<div id="top">
+		<h1>SFU iCalendar Generator</h1>
+	</div>
+	<form action="/grab" method="POST">
+		<div>
+			SFU Computing ID: <input type="text" name="username" /><br />
+			Password: <input type="password" name="password" /><br />
+			Alert: <select name="alert">
+				<option value="">None</option>
+				<option value="0">At time of event</option>
+				<option value="5">5 minutes before</option>
+				<option value="15">15 minutes before</option>
+				<option value="30">30 minutes before</option>
+				<option value="60">1 hour before</option>
+				<option value="120">2 hours before</option>
+			</select>
+		</div>
+		<div>
+			<button type="submit">Generate iCalendar</button>
+		</div>
+	</form>
+	<div id="bottom">
+		<a href="https://github.com/csvenja/SFU-iCalendar">GitHub</a> | <a href="mailto:c.svenjax@gmail.com">Contact</a>
+	</div>
+</body>
+</html>
