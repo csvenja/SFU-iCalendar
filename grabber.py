@@ -142,20 +142,19 @@ def sfu(username, password, alert):
         current_class_description = class_frame.find(id=data.id['name'] + str(class_i))
         if current_class_description:
             status = class_frame.find(id=data.id['status'] + str(class_i)).string
-            if status == 'Enrolled':
-                current_class = {}
-                current_class['name'] = current_class_description.span.string.replace('  ', ' ')
-                current_class['component'] = class_frame.find(id=data.id['component'] + str(class_i)).string
-                current_class['section'] = class_frame.find(id=data.id['section'] + str(class_i)).string
-                current_class['description'] = class_frame.find(id=data.id['description'] + str(class_i)).string
-                lesson_table = class_frame.find(id=data.id['lesson_table'] + str(class_i))
-                current_class['lessons'], lesson_i = generate_lessons(lesson_table, lesson_i)
-                if(len(current_class['lessons']) > 0):
-                    classes.append(current_class)
+            current_class = {}
+            current_class['name'] = current_class_description.span.string.replace('  ', ' ')
+            current_class['component'] = class_frame.find(id=data.id['component'] + str(class_i)).string
+            current_class['section'] = class_frame.find(id=data.id['section'] + str(class_i)).string
+            current_class['description'] = class_frame.find(id=data.id['description'] + str(class_i)).string
+            lesson_table = class_frame.find(id=data.id['lesson_table'] + str(class_i))
+            current_class['lessons'], lesson_i = generate_lessons(lesson_table, lesson_i)
+            if(len(current_class['lessons']) > 0 and status == 'Enrolled'):
+                classes.append(current_class)
             class_i = class_i + 1
         else:
             break
-    with open(os.path.join(os.path.dirname(__file__), student_name + '-' + str(data.term) + '.ics'), 'w') as ical:
+    with open(os.path.join(os.path.dirname(__file__), student_name + '.ics'), 'w') as ical:
         ical.write(generate_ical())
     print "Dumped successfully."
 #    dump(classes)
