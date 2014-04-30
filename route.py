@@ -1,5 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from flask import Flask, render_template, request, Response
 from grabber import sfu
+
 app = Flask(__name__)
 
 
@@ -15,5 +19,4 @@ def grab():
     return Response(calendar, headers=headers, mimetype='text/calendar')
 
 if __name__ == '__main__':
-    app.debug = True
     app.run()

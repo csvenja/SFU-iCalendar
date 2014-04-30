@@ -1,0 +1,21 @@
+body {
+	text-align: center;
+	font-family: "Avenir Next", "Segoe UI", "Gill Sans", Ubuntu, sans-serif !important;
+}
+
+#title {
+	font-size: 2em;
+	margin-top: 50px;
+	margin-bottom: 0;
+}
+
+#subtitle {
+	margin-top: 5px;
+	margin-bottom: 40px;
+	text-indent: 200px;
+	font-size: 1.2em;
+}
+
+form {
+	margin-bottom: 40px;
+}

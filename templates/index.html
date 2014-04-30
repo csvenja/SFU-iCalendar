@@ -3,33 +3,54 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>SFU iCalendar Generator</title>
-	<link rel="stylesheet" type="text/css" href="static/style.css">
+	<title>SFU Class Schedule to iCalendar</title>
+	<link rel="stylesheet" type="text/css" href="static/style.css" />
+	<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
 </head>
 <body>
+	<a href="https://github.com/csvenja/SFU-iCalendar">
+		<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+	</a>
 	<div id="top">
-		<h1>SFU iCalendar Generator</h1>
+		<h1 id="title">SFU Class Schedule to iCalendar</h1>
+		<p id="subtitle">for iCal, Google Calendar, etc</p>
 	</div>
-	<form action="/grab" method="POST">
-		<div>
-			SFU Computing ID: <input type="text" name="username" /><br />
-			Password: <input type="password" name="password" /><br />
-			Alert: <select name="alert">
-				<option value="">None</option>
-				<option value="0">At time of event</option>
-				<option value="5">5 minutes before</option>
-				<option value="15">15 minutes before</option>
-				<option value="30">30 minutes before</option>
-				<option value="60">1 hour before</option>
-				<option value="120">2 hours before</option>
-			</select>
+	<form id="main" class="form-horizontal" role="form" action="/grab" method="POST">
+		<div class="form-group">
+			<label for="username" class="col-sm-5 control-label">Computing ID</label>
+			<div class="col-sm-3">
+				<input id="username" type="text" class="form-control" name="username" placeholder="Computing ID" />
+			</div>
 		</div>
-		<div>
-			<button type="submit">Generate iCalendar</button>
+		<div class="form-group">
+			<label for="password" class="col-sm-5 control-label">Password</label>
+			<div class="col-sm-3">
+				<input id="password" type="password" class="form-control" name="password" placeholder="Password" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="alert" class="col-sm-5 control-label">Alert</label>
+			<div class="col-sm-3">
+				<select id="alert" name="alert" class="form-control">
+					<option value="">None</option>
+					<option value="0">At time of event</option>
+					<option value="5">5 minutes before</option>
+					<option value="15">15 minutes before</option>
+					<option value="30">30 minutes before</option>
+					<option value="60">1 hour before</option>
+					<option value="120">2 hours before</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-5">
+				<button id="export" type="submit" class="btn btn-primary">Export</button>
+			</div>
 		</div>
 	</form>
-	<div id="bottom">
-		<a href="https://github.com/csvenja/SFU-iCalendar">GitHub</a> | <a href="mailto:c.svenjax@gmail.com">Contact</a>
-	</div>
+	<footer>
+		<p>We will NOT store your password or personal information on the server.</p>
+		<p><a href="https://support.google.com/calendar/answer/37118?hl=en">Guide for Google Calendar</a></p>
+	</footer>
 </body>
 </html>
