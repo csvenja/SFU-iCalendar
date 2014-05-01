@@ -3,12 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="user-scalable=no, width=device-width" />
 	<title>SFU Class Schedule to iCalendar</title>
 	<link rel="stylesheet" type="text/css" href="static/style.css" />
 	<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
 </head>
 <body>
-	<a href="https://github.com/csvenja/SFU-iCalendar">
+	<a id="ribbon" href="https://github.com/csvenja/SFU-iCalendar">
 		<img style="position: absolute; top: 0; right: 0; border: 0; width: 149px; height: 149px;" src="http://aral.github.com/fork-me-on-github-retina-ribbons/right-graphite@2x.png" alt="Fork me on GitHub" />
 	</a>
 	<div id="top">
@@ -43,7 +44,7 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<div class="col-sm-offset-5 col-sm-3">
+			<div class="col-xs-12 col-sm-offset-5 col-sm-3">
 				<button id="export" type="submit" class="btn btn-primary">Export</button>
 			</div>
 		</div>
@@ -51,6 +52,9 @@
 	<footer>
 		<p>We will NOT store your password or personal information on the server.</p>
 		<p><a href="https://support.google.com/calendar/answer/37118?hl=en">Guide for Google Calendar</a></p>
+		<p id="links">
+			<a href="https://github.com/csvenja/SFU-iCalendar">GitHub</a> · <a href="mailto:c.svenjax@gmail.com">Contact</a>
+		</p>
 	</footer>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

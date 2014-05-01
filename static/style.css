@@ -26,3 +26,39 @@ form {
 footer {
 	text-align: center;
 }
+
+#links {
+	display: none;
+}
+
+@media only screen and (max-width: 768px) {
+	#title {
+		margin-top: 20px;
+	}
+
+	#subtitle {
+		text-indent: 0;
+		margin-bottom: 30px;
+	}
+
+	#ribbon {
+		display: none;
+	}
+
+	#export {
+		margin-top: 20px;
+		width: 100%;
+	}
+
+	#links {
+		display: block;
+	}
+
+	#links a {
+		margin: 0 4px;
+	}
+
+	footer {
+		margin-bottom: 20px;
+	}
+}
