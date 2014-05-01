@@ -176,8 +176,6 @@ if __name__ == '__main__':
         student_name, calendar = sfu(username, password, alert)
     except LoginError as e:
         print e.error
-    except:
-        raise
     else:
         with open(os.path.join(os.path.dirname(__file__), student_name + '.ics'), 'w') as ical:
             ical.write(calendar)

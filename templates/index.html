@@ -16,6 +16,18 @@
 		<h1 id="title">SFU Class Schedule to iCalendar</h1>
 		<p id="subtitle">for iCal, Google Calendar, etc</p>
 	</div>
+	<div class="col-sm-offset-3 col-sm-6">
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			{% for message in messages %}
+				<div class="alert alert-danger fade in">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+					{{ message }}
+				</div>
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
+	</div>
 	<form id="main" class="form-horizontal" role="form" action="/grab" method="POST">
 		<div class="form-group">
 			<label for="username" class="col-sm-5 control-label">Computing ID</label>
@@ -66,5 +78,8 @@
 	  ga('send', 'pageview');
 
 	</script>
+	<script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript">$(".alert").alert();</script>
 </body>
 </html>
