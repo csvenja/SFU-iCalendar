@@ -12,6 +12,15 @@ import json
 import data
 
 
+class LoginError(Exception):
+    """docstring for LoginError"""
+    def __init__(self, error):
+        self.error = error
+
+    def __str__(self):
+        return 'LoginError: {}'.format(self.error)
+
+
 def sfu(username, password, alert):
     def login(username, password):
         username_upper = username.upper()
@@ -20,15 +29,18 @@ def sfu(username, password, alert):
         session.post(data.login_address, data=payload)
         return session
 
-    # student number is needed in extracting frame
     def get_student_number(session):
+        """student number is needed in extracting frame"""
         frame = session.get(data.homepage_address)
         raw_page = BeautifulSoup(frame.text)
-        student_number = raw_page.find(id=data.id['student_number']).string
-        return student_number
+        student_number = raw_page.find(id=data.id['student_number'])
+        if student_number:
+            return student_number.string
+        else:
+            raise LoginError('Wrong username or password.')
 
-    # extract frame
     def get_frame(session, student_number):
+        """extract frame"""
         frame = session.get(data.frame_address(student_number))
         raw_page = BeautifulSoup(frame.text)
         class_frame = raw_page.find(id=data.id['class_frame'])
@@ -63,12 +75,12 @@ def sfu(username, password, alert):
                 break
         return (lessons, lesson_i)
 
-    # dump class info as a list of dictionary
     def dump(classes):
+        """dump class info as a list of dictionary"""
         print json.dumps(classes, ensure_ascii=False, indent=2)
 
-    # generate ics file
     def generate_ical():
+        """generate ics file"""
         cal = Calendar()
         cal['version'] = '2.0'
         cal['prodid'] = '-//Simon Fraser University//Svenja Cao//EN'
@@ -133,7 +145,6 @@ def sfu(username, password, alert):
                     cal.add_component(event)
         return cal.to_ical()
 
-    # main
     class_frame, student_name = get_class_frame(username, password)
     class_i = 0
     lesson_i = 0
@@ -155,13 +166,19 @@ def sfu(username, password, alert):
         else:
             break
     return (student_name, generate_ical())
-#    dump(classes)
+    # dump(classes)
 
 if __name__ == '__main__':
     username = raw_input('Username: ')
     password = getpass.getpass('Password: ')
     alert = raw_input('Alert before (minutes, enter to skip): ')
-    student_name, calendar = sfu(username, password, alert)
-    with open(os.path.join(os.path.dirname(__file__), student_name + '.ics'), 'w') as ical:
-        ical.write(calendar)
-        print "Dumped successfully."
+    try:
+        student_name, calendar = sfu(username, password, alert)
+    except LoginError as e:
+        print e.error
+    except:
+        raise
+    else:
+        with open(os.path.join(os.path.dirname(__file__), student_name + '.ics'), 'w') as ical:
+            ical.write(calendar)
+            print "Dumped successfully."
