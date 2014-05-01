@@ -51,12 +51,14 @@ def frame_address(student_number):
 # parse string to date
 def datelize(date_string):
     new_date = datetime.strptime(date_string, '%Y/%m/%d')  # e.g. 2014/01/28
-    new_date = new_date.replace(tzinfo=timezone('Canada/Pacific'))
     return new_date.date()
 
 
 # parse string to time
 def timelize(time_string):
     new_time = datetime.strptime(time_string, '%I:%M%p')  # e.g. 6:00AM
-    new_time = new_time.replace(tzinfo=timezone('Canada/Pacific'))
     return new_time.time()
+
+def time_zone(t):
+    new_t = t.replace(tzinfo=timezone('Canada/Pacific'))
+    return new_t

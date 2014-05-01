@@ -90,8 +90,8 @@ def sfu(username, password, alert):
                 start_date = data.datelize(lesson['start_date'])
                 start_time = data.timelize(lesson['start_time'])
                 end_time = data.timelize(lesson['end_time'])
-                start = datetime.combine(start_date, start_time)  # class start datetime
-                end = datetime.combine(start_date, end_time)  # class end datetime
+                start = data.time_zone(datetime.combine(start_date, start_time))  # class start datetime
+                end = data.time_zone(datetime.combine(start_date, end_time))  # class end datetime
                 end_date = data.datelize(lesson['end_date'])
                 until = datetime.combine(end_date, end_time)  # recurrence end datetime
                 for day in lesson['days']:
