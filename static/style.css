@@ -1,5 +1,4 @@
 body {
-	text-align: center;
 	font-family: "Avenir Next", "Segoe UI", "Gill Sans", Ubuntu, sans-serif !important;
 }
 
@@ -7,6 +6,7 @@ body {
 	font-size: 2em;
 	margin-top: 50px;
 	margin-bottom: 0;
+	text-align: center;
 }
 
 #subtitle {
@@ -14,10 +14,15 @@ body {
 	margin-bottom: 40px;
 	text-indent: 200px;
 	font-size: 1.2em;
+	text-align: center;
 }
 
 form {
 	margin-bottom: 40px;
 	padding-left: 15px;
 	padding-right: 15px;
+}
+
+footer {
+	text-align: center;
 }
