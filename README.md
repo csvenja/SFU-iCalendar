@@ -3,7 +3,11 @@ SFU iCalendar
 
 Convert [go.sfu.ca](http://go.sfu.ca/) class schedule to iCalendar file (for iCal, Google Calendar, etc).
 
-## Usage
+## Online Usage
+
+[sfu-ical.svenja.im](http://sfu-ical.svenja.im)
+
+## Command Line Usage
 
 0. Install pip
 0. `sudo pip install -r requirements.txt`
