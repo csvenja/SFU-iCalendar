@@ -1,7 +1,14 @@
 from pytz import timezone
 from datetime import datetime
 
-term = 1144
+
+class TermError(ValueError):
+    def __init__(self, error):
+        self.error = error
+
+    def __str__(self):
+        return 'TermError: {}'.format(self.error)
+
 
 # change weekdays to numbers for datetime.weekday()
 weekdays = {
@@ -44,7 +51,40 @@ id = {
 }
 
 
-def frame_address(student_number):
+# roughly calculate what term it is now
+def calc_current_term():
+    today = datetime.today()
+    year = str(today.year)[2:4]
+    if today.month >= 8:
+        season = 7  # Fall
+    elif today.month >= 5:
+        season = 4  # Summer
+    else:
+        season = 1  # Spring
+    return '1%s%d' % (year, season)
+
+
+# convert (year, season) into term ID
+def convert_term(term):
+    year = str(term[0]).strip()[2:4]
+    season = term[1].lower().strip()
+    if season == 'spring':
+        season = 1
+    elif season == 'summer':
+        season = 4
+    elif season == 'fall':
+        season = 7
+    else:
+        raise TermError('Cannot recognize input term')
+    return '1%s%d' % (year, season)
+
+
+# get frame address based on student number and term(year, season)
+def frame_address(student_number, term=None):
+    if term is None:
+        term = calc_current_term()
+    else:
+        term = convert_term(term)
     return class_frame_address[0] + student_number + class_frame_address[1] + str(term) + class_frame_address[2]
 
 
