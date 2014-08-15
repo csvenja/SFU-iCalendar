@@ -16,8 +16,8 @@ def index():
 @app.route('/grab', methods=['POST'])
 def grab():
     try:
-        student_name, calendar = sfu(request.form['username'], request.form['password'], request.form['alert'])
-    except LoginError as e:
+        student_name, calendar = sfu(request.form['username'], request.form['password'], request.form['alert'], request.form['term'])
+    except (LoginError, ValueError) as e:
         flash(e.error)
         return redirect(url_for('index'))
     else:
