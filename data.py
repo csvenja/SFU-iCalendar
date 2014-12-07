@@ -49,7 +49,8 @@ def get_years():
     year_limit = cur_year + 1
     if cur_month >= 11:  # enroll for new year semester begins at November
         year_limit += 1
-    years = range(2014, year_limit, -1)  # reverse year list, set default to current year
+    years = range(2014, year_limit)
+    years.reverse()  # reverse year list, set default to current year
     return years
 
 
