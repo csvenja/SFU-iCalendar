@@ -85,18 +85,6 @@ def sfu(username, password, alert, year, semester):
         cal['version'] = '2.0'
         cal['prodid'] = '-//Simon Fraser University//Svenja Cao//EN'
 
-        # holidays via http://www.sfu.ca/students/calendar/2014/summer/academic-dates/2014.html
-        holidays = [
-            data.datelize('2014/01/11'),  # New Year's Day
-            data.datelize('2014/02/10'),  # Family Day in B.C.
-            data.datelize('2014/05/19'),  # Victoria Day
-            data.datelize('2014/07/01'),  # Canada Day
-            data.datelize('2014/08/04'),  # B.C. Day
-            data.datelize('2014/09/01'),  # Labour Day
-            data.datelize('2014/10/13'),  # Thanksgiving
-            data.datelize('2014/11/11'),  # Remembrance Day
-        ]
-
         for class_item in classes:
             for lesson in class_item['lessons']:
                 start_date = data.datelize(lesson['start_date'])
@@ -129,7 +117,7 @@ def sfu(username, password, alert, year, semester):
                         exdates = []
                     else:
                         exdates = [start]
-                    for holiday in holidays:
+                    for holiday in data.holidays[year]:
                         exdates.append(datetime.combine(holiday, start_time))
                     event.add('exdate', exdates)
 
@@ -183,4 +171,4 @@ if __name__ == '__main__':
     else:
         with open(os.path.join(os.path.dirname(__file__), student_name + '.ics'), 'w') as ical:
             ical.write(calendar)
-            print "Dumped successfully."
+            print 'Dumped successfully.'

@@ -43,8 +43,13 @@ id = {
 
 
 def get_years():
-    cur_year = datetime.today().year
-    years = range(2014, cur_year + 2)
+    today = datetime.today()
+    cur_year = today.year
+    cur_month = today.month
+    year_limit = cur_year + 1
+    if cur_month >= 11:  # enroll for new year semester begins at November
+        year_limit += 1
+    years = range(2014, year_limit, -1)  # reverse year list, set default to current year
     return years
 
 
@@ -73,3 +78,36 @@ def timelize(time_string):
 def time_zone(time):
     new_time = time.replace(tzinfo=timezone('Canada/Pacific'))
     return new_time
+
+
+holidays = {
+    # holidays via http://www.sfu.ca/students/calendar/2014/summer/academic-dates/2014.html
+    '2014': [
+        datelize('2014/01/01'),  # New Year's Day
+        datelize('2014/02/10'),  # Family Day in B.C.
+        datelize('2014/05/19'),  # Victoria Day
+        datelize('2014/07/01'),  # Canada Day
+        datelize('2014/08/04'),  # B.C. Day
+        datelize('2014/09/01'),  # Labour Day
+        datelize('2014/10/13'),  # Thanksgiving
+        datelize('2014/11/11'),  # Remembrance Day
+    ],
+    # holidays via http://www.sfu.ca/students/calendar/2015/spring/academic-dates/2015.html
+    '2015': [
+        datelize('2015/01/01'),  # New Year's Day
+        datelize('2015/02/09'),  # Family Day in B.C.
+        datelize('2015/02/10'),  # Reading break
+        datelize('2015/02/11'),  # Reading break
+        datelize('2015/02/12'),  # Reading break
+        datelize('2015/02/13'),  # Reading break
+        datelize('2015/02/14'),  # Reading break
+        datelize('2015/04/03'),  # Easter break
+        datelize('2015/04/06'),  # Easter break
+        datelize('2015/05/18'),  # Victoria Day
+        datelize('2015/07/01'),  # Canada Day
+        datelize('2015/08/03'),  # B.C. Day
+        datelize('2015/09/07'),  # Labour Day
+        datelize('2015/10/12'),  # Thanksgiving
+        datelize('2015/11/11'),  # Remembrance Day
+    ]
+}
