@@ -10,7 +10,6 @@ from icalendar import Calendar, Event, Alarm
 from datetime import datetime, timedelta
 import json
 import data
-import re
 
 
 class LoginError(Exception):
@@ -22,7 +21,7 @@ class LoginError(Exception):
         return 'LoginError: {}'.format(self.error)
 
 
-def sfu(username, password, alert, term):
+def sfu(username, password, alert, year, semester):
     def login(username, password):
         username_upper = username.upper()
         session = requests.Session()
@@ -51,14 +50,6 @@ def sfu(username, password, alert, term):
     def get_class_frame(username, password, term):
         session = login(username, password)
         student_number = get_student_number(session)
-        if term == '':
-            term = None
-        else:
-            regex = re.compile('(\d+)\W*(\w+)')
-            term = regex.findall(term)
-            if term == []:
-                raise ValueError('Input term string invalid')
-            term = term[0]
         return get_frame(session, student_number, term)
 
     def generate_lessons(lesson_table, lesson_i):
@@ -154,6 +145,7 @@ def sfu(username, password, alert, term):
                     cal.add_component(event)
         return cal.to_ical()
 
+    term = data.get_term(year, semester)
     class_frame, student_name = get_class_frame(username, password, term)
     class_i = 0
     lesson_i = 0
@@ -181,10 +173,11 @@ def sfu(username, password, alert, term):
 if __name__ == '__main__':
     username = raw_input('Username: ')
     password = getpass.getpass('Password: ')
+    year = raw_input('Year (2015):')
+    semester = raw_input('Semester (Spring/Summer/Fall):')
     alert = raw_input('Alert before (minutes, enter to skip): ')
-    term = raw_input('Term to be grabbed (e.g. "2014 Fall", enter to grab current): ')
     try:
-        student_name, calendar = sfu(username, password, alert, term)
+        student_name, calendar = sfu(username, password, alert, year, semester)
     except LoginError as e:
         print e.error
     else:

@@ -23,6 +23,17 @@ form {
 	padding-right: 15px;
 }
 
+#year {
+	float: left;
+	width: 48%;
+}
+
+#semester {
+	float: left;
+	width: 50%;
+	margin-right: 5px;
+}
+
 footer {
 	text-align: center;
 }
