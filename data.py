@@ -102,7 +102,7 @@ holidays = {
         datelize('2015/02/12'),  # Reading break
         datelize('2015/02/13'),  # Reading break
         datelize('2015/02/14'),  # Reading break
-        datelize('2015/04/03'),  # Easter break
+        datelize('2015/04/03'),  # Good Friday
         datelize('2015/04/06'),  # Easter break
         datelize('2015/05/18'),  # Victoria Day
         datelize('2015/07/01'),  # Canada Day
@@ -110,5 +110,40 @@ holidays = {
         datelize('2015/09/07'),  # Labour Day
         datelize('2015/10/12'),  # Thanksgiving
         datelize('2015/11/11'),  # Remembrance Day
+    ],
+    # holidays via http://www.sfu.ca/students/calendar/2015/spring/academic-dates/2016.html
+    '2016': [
+        datelize('2016/01/01'),  # New Year's Day
+        datelize('2016/02/08'),  # Family Day in B.C.
+        datelize('2016/02/09'),  # Reading break
+        datelize('2016/02/10'),  # Reading break
+        datelize('2016/02/11'),  # Reading break
+        datelize('2016/02/12'),  # Reading break
+        datelize('2016/02/13'),  # Reading break
+        datelize('2016/02/14'),  # Reading break
+        datelize('2016/03/25'),  # Good Friday
+        datelize('2016/03/28'),  # Easter Monday
+        datelize('2016/05/23'),  # Victoria Day
+        datelize('2016/07/01'),  # Canada Day
+        datelize('2016/08/01'),  # B.C. Day
+        datelize('2016/09/05'),  # Labour Day
+        datelize('2016/10/10'),  # Thanksgiving
+        datelize('2016/11/11'),  # Remembrance Day
+    ],
+    # holidays via http://www.sfu.ca/students/calendar/2015/spring/academic-dates/2017.html
+    '2017': [
+        datelize('2017/01/02'),  # New Year's Day
+        datelize('2017/02/13'),  # Family Day in B.C.
+        datelize('2017/02/14'),  # Reading break
+        datelize('2017/02/15'),  # Reading break
+        datelize('2017/02/16'),  # Reading break
+        datelize('2017/02/17'),  # Reading break
+        datelize('2017/02/18'),  # Reading break
+        datelize('2017/02/19'),  # Reading break
+        datelize('2017/04/14'),  # Good Friday
+        datelize('2017/04/17'),  # Easter Monday
+        datelize('2017/05/22'),  # Victoria Day
+        datelize('2017/07/03'),  # Canada Day
+        datelize('2017/08/07'),  # B.C. Day
     ]
 }
