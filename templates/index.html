@@ -45,9 +45,9 @@
 			<label for="year" class="col-sm-5 control-label">Term</label>
 			<div class="col-sm-3">
 				<select id="semester" name="semester" class="form-control">
-					<option value="1">Spring</option>
-					<option value="4">Summer</option>
-					<option value="7">Fall</option>
+				{% for semester in semesters %}
+					<option value="{{ semester[1] }}">{{ semester[0] }}</option>
+				{% endfor %}
 				</select>
 				<select id="year" name="year" class="form-control">
 				{% for year in years %}

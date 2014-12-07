@@ -42,12 +42,26 @@ id = {
 }
 
 
+def get_semesters():
+    spring = ('Spring', '1')
+    summer = ('Summer', '4')
+    fall = ('Fall', '7')
+    today = datetime.today()
+    cur_month = today.month
+    if cur_month >= 11:  # enroll for Spring begins in November
+        return [spring, summer, fall]
+    elif cur_month >= 7:  # enroll for Fall begins in July
+        return [fall, spring, summer]
+    elif cur_month >= 3:  # enroll for Summer begins in March
+        return [summer, fall, spring]
+
+
 def get_years():
     today = datetime.today()
     cur_year = today.year
     cur_month = today.month
     year_limit = cur_year + 1
-    if cur_month >= 11:  # enroll for new year semester begins at November
+    if cur_month >= 11:  # enroll for new year semester begins in November
         year_limit += 1
     years = range(2014, year_limit)
     years.reverse()  # reverse year list, set default to current year

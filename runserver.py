@@ -3,7 +3,7 @@
 
 from flask import Flask, render_template, request, Response, flash, redirect, url_for
 from grabber import sfu, LoginError
-from data import get_years
+from data import get_years, get_semesters
 
 app = Flask(__name__)
 app.secret_key = '8g789erobgyekhlwctybgwy4j93xft6'
@@ -11,7 +11,7 @@ app.secret_key = '8g789erobgyekhlwctybgwy4j93xft6'
 
 @app.route('/')
 def index():
-    return render_template('index.html', years=get_years())
+    return render_template('index.html', years=get_years(), semesters=get_semesters())
 
 
 @app.route('/grab', methods=['POST'])
