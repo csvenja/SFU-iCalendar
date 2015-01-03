@@ -48,7 +48,7 @@ def get_semesters():
     fall = ('Fall', '7')
     today = datetime.today()
     cur_month = today.month
-    if cur_month >= 11:  # enroll for Spring begins in November
+    if cur_month >= 11 or cur_month < 3:  # enroll for Spring begins in November
         return [spring, summer, fall]
     elif cur_month >= 7:  # enroll for Fall begins in July
         return [fall, spring, summer]
