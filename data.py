@@ -38,7 +38,7 @@ id = {
     'location': 'DERIVED_SSE_DSP_DESCR40$',
     'start_date': 'DERIVED_SSE_DSP_START_DT$',
     'end_date': 'DERIVED_SSE_DSP_END_DT$',
-    'instructor': 'PERSONAL_VW_NAME$141$$',
+    'instructor': 'PERSONAL_VW_NAME$143$$',
 }
 
 
