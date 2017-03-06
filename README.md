@@ -1,7 +1,7 @@
 SFU iCalendar
 ====================
 
-Convert [go.sfu.ca](http://go.sfu.ca/) class schedule to iCalendar file (for iCal, Google Calendar, etc).
+Convert [go.sfu.ca](http://go.sfu.ca/) class schedule to iCalendar file (for iCal, Google Calendar, etc.).
 
 ## Online Usage
 
@@ -21,9 +21,9 @@ All kinds of pull requests are welcome.
 
 ## Disclaimer
 
-There may be mistakes. Please use this script carefully, the author is not responsible for any late or fail in class.
+There may be mistakes. Please use this script carefully. The author is not responsible for any missed or failed classes.
 
-If unexpected thing happened, please open an issue.
+If anything unexpected happens, please open an issue.
 
 ## License
 MIT
